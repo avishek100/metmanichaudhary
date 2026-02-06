@@ -231,6 +231,16 @@
   }
 }
 
+/* Responsive helpers */
+.img-responsive {
+  @apply w-full h-auto object-cover;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 @layer utilities {
   .animate-fade-up {
     animation: fadeUp 0.6s ease-out forwards;
