@@ -17,8 +17,6 @@ const Header = () => {
     { key: 'nav.achievements', path: '/achievements' },
     { key: 'nav.news', path: '/news' },
     { key: 'nav.gallery', path: '/gallery' },
-    { key: 'nav.feedback', path: '/feedback' },
-    { key: 'nav.contact', path: '/contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: metmani-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: "cd backend && npm ci"
+    startCommand: "cd backend && npm start"
+    repo: ""
+    branch: "main"

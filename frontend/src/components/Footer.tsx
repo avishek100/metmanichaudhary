@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { t, isNepali } = useLanguage();
@@ -10,7 +10,6 @@ const Footer = () => {
     { key: 'nav.vision', path: '/vision' },
     { key: 'nav.achievements', path: '/achievements' },
     { key: 'nav.news', path: '/news' },
-    { key: 'nav.feedback', path: '/feedback' },
   ];
 
   const socialLinks = [
@@ -51,9 +50,8 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className={`text-primary-foreground/80 hover:text-secondary transition-colors text-sm ${
-                      isNepali ? 'font-nepali' : ''
-                    }`}
+                    className={`text-primary-foreground/80 hover:text-secondary transition-colors text-sm ${isNepali ? 'font-nepali' : ''
+                      }`}
                   >
                     {t(link.key)}
                   </Link>
