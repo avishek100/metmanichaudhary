@@ -54,8 +54,17 @@ const NewsPage = () => {
       <section className="py-16 lg:py-24 bg-background">
         <div className="container-main">
           {isLoading ? (
-            <div className="text-center py-12">
-              <p className={`text-muted-foreground ${isNepali ? 'font-nepali' : ''}`}>Loading news...</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="card-agenda">
+                  <div className="skeleton h-40 w-full rounded-lg mb-4" />
+                  <div className="skeleton h-4 w-24 mb-3" />
+                  <div className="skeleton h-4 w-20 mb-3" />
+                  <div className="skeleton h-6 w-full mb-2" />
+                  <div className="skeleton h-4 w-full mb-1" />
+                  <div className="skeleton h-4 w-3/4" />
+                </div>
+              ))}
             </div>
           ) : newsItems.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">

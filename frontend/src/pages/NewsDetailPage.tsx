@@ -46,8 +46,15 @@ const NewsDetailPage = () => {
     if (isLoading) {
         return (
             <Layout>
-                <div className="py-16 text-center">
-                    <p className="text-muted-foreground">Loading...</p>
+                <div className="py-16 lg:py-24 bg-background">
+                    <div className="container-main max-w-3xl">
+                        <div className="skeleton h-6 w-32 mb-6" />
+                        <div className="skeleton h-12 w-3/4 mb-4" />
+                        <div className="skeleton h-64 w-full mb-6 rounded-lg" />
+                        <div className="skeleton h-4 w-full mb-2" />
+                        <div className="skeleton h-4 w-full mb-2" />
+                        <div className="skeleton h-4 w-2/3" />
+                    </div>
                 </div>
             </Layout>
         );
@@ -56,15 +63,19 @@ const NewsDetailPage = () => {
     if (error || !news) {
         return (
             <Layout>
-                <div className="py-16 text-center">
-                    <p className="text-red-500 mb-4">{error || 'News not found'}</p>
-                    <button
-                        onClick={() => navigate('/news')}
-                        className="inline-flex items-center gap-2 px-4 py-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                    >
-                        <ArrowLeft size={18} />
-                        Back to News
-                    </button>
+                <div className="py-16 lg:py-24 bg-background">
+                    <div className="container-main max-w-3xl text-center">
+                        <div className="text-6xl mb-4">📰</div>
+                        <h2 className="text-2xl font-bold text-foreground mb-2">News Not Found</h2>
+                        <p className="text-muted-foreground mb-6">{error || 'The news article you are looking for does not exist or has been removed.'}</p>
+                        <button
+                            onClick={() => navigate('/news')}
+                            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+                        >
+                            <ArrowLeft size={18} />
+                            Back to News
+                        </button>
+                    </div>
                 </div>
             </Layout>
         );

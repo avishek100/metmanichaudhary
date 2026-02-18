@@ -78,6 +78,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Gallery
     'gallery.title': 'Photo Gallery',
     'gallery.subtitle': 'Moments with the people',
+    'gallery.photos': 'Photos',
+    'gallery.videos': 'Videos',
     
     // Feedback
     'feedback.title': 'Share Your Voice',
@@ -175,6 +177,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Gallery
     'gallery.title': 'फोटो ग्यालरी',
     'gallery.subtitle': 'जनतासँगको क्षणहरू',
+    'gallery.photos': 'फोटोहरू',
+    'gallery.videos': 'भिडियोहरू',
     
     // Feedback
     'feedback.title': 'आफ्नो आवाज सुनाउनुहोस्',

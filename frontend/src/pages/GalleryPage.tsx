@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import apiFetch from '@/lib/api';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Image, Video } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const GalleryPage = () => {
@@ -88,22 +88,65 @@ const GalleryPage = () => {
       </section>
 
       {/* Toggle */}
-      <section className="py-6 lg:py-8 bg-background">
+      <section className="py-8 lg:py-12 bg-background">
         <div className="container-main flex justify-center">
-          <div className="inline-flex rounded-lg bg-white/5 p-1">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="relative inline-flex items-center gap-2 bg-card border-2 border-border rounded-2xl p-2 shadow-lg"
+          >
+            {/* Animated Background Indicator */}
+            <motion.div
+              className="absolute top-2 bottom-2 rounded-xl bg-gradient-to-r from-primary to-secondary"
+              initial={false}
+              animate={{
+                left: viewMode === 'photos' ? '0.5rem' : '50%',
+                width: 'calc(50% - 0.5rem)',
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 500,
+                damping: 30,
+              }}
+            />
+
+            {/* Photos Button */}
             <button
-              className={`px-4 py-2 rounded-lg font-medium ${viewMode === 'photos' ? 'bg-white/10' : 'hover:bg-white/5'}`}
               onClick={() => setViewMode('photos')}
+              className={`relative z-10 flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                viewMode === 'photos'
+                  ? 'text-white shadow-md'
+                  : 'text-muted-foreground hover:text-foreground'
+              } ${isNepali ? 'font-nepali' : ''}`}
             >
-              {t('gallery.photos') || 'Photos'}
+              <Image
+                size={20}
+                className={`transition-transform duration-300 ${
+                  viewMode === 'photos' ? 'scale-110' : 'scale-100'
+                }`}
+              />
+              <span>{t('gallery.photos') || 'Photos'}</span>
             </button>
+
+            {/* Videos Button */}
             <button
-              className={`px-4 py-2 rounded-lg font-medium ${viewMode === 'videos' ? 'bg-white/10' : 'hover:bg-white/5'}`}
               onClick={() => setViewMode('videos')}
+              className={`relative z-10 flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                viewMode === 'videos'
+                  ? 'text-white shadow-md'
+                  : 'text-muted-foreground hover:text-foreground'
+              } ${isNepali ? 'font-nepali' : ''}`}
             >
-              {t('gallery.videos') || 'Videos'}
+              <Video
+                size={20}
+                className={`transition-transform duration-300 ${
+                  viewMode === 'videos' ? 'scale-110' : 'scale-100'
+                }`}
+              />
+              <span>{t('gallery.videos') || 'Videos'}</span>
             </button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -111,8 +154,10 @@ const GalleryPage = () => {
       <section className="py-16 lg:py-24 bg-background">
         <div className="container-main">
           {isLoading ? (
-            <div className="text-center py-12">
-              <p className={`text-muted-foreground ${isNepali ? 'font-nepali' : ''}`}>Loading gallery...</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="aspect-square skeleton rounded-xl" />
+              ))}
             </div>
           ) : galleryImages.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">

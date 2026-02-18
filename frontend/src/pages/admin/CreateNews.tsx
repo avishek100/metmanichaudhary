@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -11,6 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AdminAuthContext';
 import apiFetch from '@/lib/api';
+import { FileText, Image as ImageIcon, Save, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -48,6 +50,12 @@ export default function CreateNews() {
         setIsLoading(true);
 
         try {
+            if (!formData.title || !formData.description || !image) {
+                toast.error('Please fill in all required fields');
+                setIsLoading(false);
+                return;
+            }
+
             const formDataToSend = new FormData();
             Object.entries(formData).forEach(([key, value]) => {
                 formDataToSend.append(key, value);
@@ -64,14 +72,16 @@ export default function CreateNews() {
                 body: formDataToSend,
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                toast.success('News created successfully');
+                toast.success('News created successfully!');
                 navigate('/admin/news');
             } else {
-                toast.error('Failed to create news');
+                toast.error(data.message || 'Failed to create news');
             }
-        } catch (error) {
-            toast.error('Error creating news');
+        } catch (error: any) {
+            toast.error(error?.message || 'Error creating news');
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -81,102 +91,155 @@ export default function CreateNews() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold">Create News</h1>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    Create News Article
+                </h1>
+                <p className="text-muted-foreground mt-1">Add a new news article to your website</p>
             </div>
 
-            <Card>
+            <Card className="border-2 border-border shadow-lg">
                 <CardHeader>
-                    <CardTitle>News Details</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-primary" />
+                        News Details
+                    </CardTitle>
+                    <CardDescription>Fill in the information below to create a new news article</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Title (English)</label>
+                        {/* Titles */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="title" className="text-sm font-semibold">
+                                    Title (English) <span className="text-destructive">*</span>
+                                </Label>
                                 <Input
+                                    id="title"
                                     name="title"
                                     value={formData.title}
                                     onChange={handleInputChange}
                                     placeholder="Enter news title"
                                     required
+                                    className="h-11"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Title (Hindi)</label>
+                            <div className="space-y-2">
+                                <Label htmlFor="titleHindi" className="text-sm font-semibold">
+                                    Title (Hindi)
+                                </Label>
                                 <Input
+                                    id="titleHindi"
                                     name="titleHindi"
                                     value={formData.titleHindi}
                                     onChange={handleInputChange}
                                     placeholder="समाचार शीर्षक दर्ज करें"
+                                    className="h-11"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Description (English)</label>
+                        {/* Descriptions */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="description" className="text-sm font-semibold">
+                                    Description (English) <span className="text-destructive">*</span>
+                                </Label>
                                 <Textarea
+                                    id="description"
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
                                     placeholder="Enter news description"
                                     required
+                                    rows={4}
+                                    className="resize-none"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Description (Hindi)</label>
+                            <div className="space-y-2">
+                                <Label htmlFor="descriptionHindi" className="text-sm font-semibold">
+                                    Description (Hindi)
+                                </Label>
                                 <Textarea
+                                    id="descriptionHindi"
                                     name="descriptionHindi"
                                     value={formData.descriptionHindi}
                                     onChange={handleInputChange}
                                     placeholder="समाचार विवरण दर्ज करें"
+                                    rows={4}
+                                    className="resize-none"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Content (English)</label>
+                        {/* Content */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="content" className="text-sm font-semibold">
+                                    Content (English)
+                                </Label>
                                 <Textarea
+                                    id="content"
                                     name="content"
                                     value={formData.content}
                                     onChange={handleInputChange}
                                     placeholder="Enter full news content"
-                                    rows={6}
+                                    rows={8}
+                                    className="resize-none"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Content (Hindi)</label>
+                            <div className="space-y-2">
+                                <Label htmlFor="contentHindi" className="text-sm font-semibold">
+                                    Content (Hindi)
+                                </Label>
                                 <Textarea
+                                    id="contentHindi"
                                     name="contentHindi"
                                     value={formData.contentHindi}
                                     onChange={handleInputChange}
                                     placeholder="पूरा समाचार सामग्री दर्ज करें"
-                                    rows={6}
+                                    rows={8}
+                                    className="resize-none"
                                 />
                             </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Featured Image</label>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                required
-                            />
+                        {/* Image Upload */}
+                        <div className="space-y-2">
+                            <Label htmlFor="image" className="text-sm font-semibold flex items-center gap-2">
+                                <ImageIcon className="w-4 h-4" />
+                                Featured Image <span className="text-destructive">*</span>
+                            </Label>
+                            <div className="border-2 border-dashed border-border rounded-lg p-6 hover:border-primary/50 transition-colors">
+                                <Input
+                                    id="image"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    required
+                                    className="cursor-pointer"
+                                />
+                                {image && (
+                                    <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                                        <ImageIcon className="w-4 h-4" />
+                                        Selected: {image.name}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Category</label>
+                        {/* Category and Status */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="category" className="text-sm font-semibold">
+                                    Category
+                                </Label>
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({ ...prev, category: value }))
                                     }
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger id="category">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -187,15 +250,17 @@ export default function CreateNews() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Status</label>
+                            <div className="space-y-2">
+                                <Label htmlFor="status" className="text-sm font-semibold">
+                                    Status
+                                </Label>
                                 <Select
                                     value={formData.status}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({ ...prev, status: value }))
                                     }
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger id="status">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -206,15 +271,32 @@ export default function CreateNews() {
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <Button type="submit" disabled={isLoading}>
-                                {isLoading ? 'Creating...' : 'Create News'}
+                        {/* Actions */}
+                        <div className="flex gap-4 pt-4 border-t border-border">
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 shadow-lg"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Creating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="w-4 h-4 mr-2" />
+                                        Create News
+                                    </>
+                                )}
                             </Button>
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => navigate('/admin/news')}
+                                disabled={isLoading}
                             >
+                                <X className="w-4 h-4 mr-2" />
                                 Cancel
                             </Button>
                         </div>

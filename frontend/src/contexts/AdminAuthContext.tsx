@@ -40,9 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (response.ok) {
                 const userData = await response.json();
                 setUser(userData);
+            } else {
+                // Token invalid or expired
+                if (response.status === 401 || response.status === 403) {
+                    logout();
+                }
             }
         } catch (error) {
             console.error('Failed to fetch current user:', error);
+            logout();
         }
     };
 
@@ -57,14 +63,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 body: JSON.stringify({ email, password }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error('Login failed');
+                throw new Error(data.message || 'Login failed');
             }
 
-            const data = await response.json();
             setToken(data.token);
             setUser(data.user);
             localStorage.setItem('adminToken', data.token);
+        } catch (error: any) {
+            throw error;
         } finally {
             setIsLoading(false);
         }
